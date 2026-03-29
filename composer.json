@@ -25,6 +25,7 @@
             "App\\": "app/",
             "Users\\": "app/Modules/Users/",
             "Hotels\\": "app/Modules/Hotels/",
+            "RoomTypes\\": "app/Modules/RoomTypes/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }

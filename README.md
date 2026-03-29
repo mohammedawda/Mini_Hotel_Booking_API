@@ -55,6 +55,11 @@ Handles user registration, authentication, and profile management.
 | `POST` | `/api/login` | Log in and receive a token | No |
 | `POST` | `/api/logout` | Log out and revoke token | Yes |
 | `GET` | `/api/user` | Get authenticated user data | Yes |
+| `GET` | `/api/room-types` | List all room types | No |
+| `GET` | `/api/room-types/{id}` | Get specific room type | No |
+| `POST` | `/api/room-types` | Create a new room type | Yes |
+| `PUT` | `/api/room-types/{id}` | Update a room type | Yes |
+| `DELETE` | `/api/room-types/{id}` | Delete a room type | Yes |
 
 ---
 

@@ -6,6 +6,8 @@ use App\Casts\TimestampDefaultFormat;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Hotels\Domain\Enums\HotelStatus;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use RoomTypes\Infrastructure\Models\RoomType;
 
 class Hotel extends Model
 {
@@ -27,5 +29,10 @@ class Hotel extends Model
             "created_at" => TimestampDefaultFormat::class,
             "updated_at" => TimestampDefaultFormat::class,
         ];
+    }
+
+    public function roomTypes(): HasMany
+    {
+        return $this->hasMany(RoomType::class);
     }
 }
