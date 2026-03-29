@@ -1,0 +1,6 @@
+<?php
+
+return [
+    App\Providers\AppServiceProvider::class,
+    Users\UsersServiceProvider::class,
+];
