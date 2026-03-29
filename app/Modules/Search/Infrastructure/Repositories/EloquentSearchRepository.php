@@ -8,11 +8,13 @@ use Bookings\Contracts\BookingRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Bookings\Domain\Services\PricingService;
 
 class EloquentSearchRepository implements SearchRepositoryInterface
 {
     public function __construct(
-        private BookingRepositoryInterface $bookingRepository
+        private BookingRepositoryInterface $bookingRepository,
+        private PricingService $pricingService
     ) {}
 
     public function getAvailableHotels(array $filters): Collection
@@ -51,8 +53,11 @@ class EloquentSearchRepository implements SearchRepositoryInterface
                 $availableRooms = $roomType->total_rooms - $bookedRoomsCount;
 
                 if ($availableRooms > 0) {
-                    $stayDuration = Carbon::parse($checkIn)->diffInDays(Carbon::parse($checkOut));
-                    $totalPrice = $roomType->base_price * ($stayDuration ?: 1);
+                    $totalPrice = $this->pricingService->calculateTotalPrice(
+                        (float) $roomType->base_price,
+                        $checkIn,
+                        $checkOut
+                    );
 
                     $results->push([
                         'hotel'           => $hotel,

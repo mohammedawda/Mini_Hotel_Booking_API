@@ -7,12 +7,14 @@ use Bookings\Domain\Enums\BookingStatus;
 use Bookings\Infrastructure\Models\Booking;
 use RoomTypes\Infrastructure\Models\RoomType;
 use Illuminate\Support\Facades\DB;
+use Bookings\Domain\Services\PricingService;
 use Exception;
 
 class BookingService
 {
     public function __construct(
-        private BookingRepositoryInterface $bookingRepository
+        private BookingRepositoryInterface $bookingRepository,
+        private PricingService $pricingService
     ) {}
 
     /**
@@ -47,7 +49,15 @@ class BookingService
                 throw new Exception("Max occupancy exceeded for the selected room type.");
             }
 
-            // 4. Create the booking
+            // 4. Calculate total price server-side
+            $data['total_price'] = $this->pricingService->calculateTotalPrice(
+                (float) $roomType->base_price,
+                $data['check_in'],
+                $data['check_out'],
+                $data['rooms_count']
+            );
+
+            // 5. Create the booking
             return $this->bookingRepository->create($data);
         });
     }

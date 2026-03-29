@@ -119,6 +119,17 @@ To ensure system reliability and prevent overbooking (race conditions), we imple
 
 ---
 
+## 💰 Pricing Rules
+
+The system automatically calculates stay prices based on the following rules:
+
+1.  **Base Price**: Derived from the room type's base price.
+2.  **Weekend Surcharge**: A **+20%** surcharge is applied to any night that falls on a weekend (Saturday or Sunday).
+3.  **Long Stay Discount**: A **10% discount** is applied to the total price if the stay duration is **5 nights or more**.
+4.  **Currency Integrity**: Prices are calculated server-side during both search and booking creation to ensure consistency.
+
+---
+
 ## ⚙️ Installation & Setup
 
 1. **Clone the repository**:
