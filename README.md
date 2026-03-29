@@ -130,6 +130,37 @@ The system automatically calculates stay prices based on the following rules:
 
 ---
 
+## 🐳 Docker Setup (Alternative)
+
+If you prefer to run the project using a pre-configured Docker environment, follow these steps:
+
+### 📂 Directory Structure
+To ensure correct mounting, organize your directories as follows:
+- `/home/hotel-docker`
+- `/home/backend/Mini_Hotel_Booking_API`
+
+### 🚀 Setup Steps
+
+1. **Clone the Docker repository**:
+   ```bash
+   git clone https://github.com/mohammedawda/hotel-docker
+   cd hotel-docker
+   ```
+
+2. **Build and start the containers**:
+   ```bash
+   docker compose up -d
+   ```
+
+3. **Access the Application container**:
+   To run artisan commands or composer, enter the `hotel_app` container:
+   ```bash
+   docker exec -it hotel_app bash
+   cd Mini_Hotel_Booking_API
+   ```
+
+---
+
 ## ⚙️ Installation & Setup
 
 1. **Clone the repository**:
