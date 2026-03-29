@@ -38,6 +38,11 @@ class RoomType extends Model
         ];
     }
 
+    protected static function newFactory()
+    {
+        return \Database\Factories\RoomTypeFactory::new();
+    }
+
     public function hotel(): BelongsTo
     {
         return $this->belongsTo(Hotel::class);

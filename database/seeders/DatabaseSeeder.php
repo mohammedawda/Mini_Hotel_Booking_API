@@ -13,11 +13,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            HotelSeeder::class,
+            RoomTypeSeeder::class,
         ]);
+
+        // Seed an admin user
+        \Users\Infrastructure\Models\User::factory()->create([
+            'name'  => 'Test Admin',
+            'email' => 'admin@example.com',
+        ]);
+
+        // Seed 10 random users
+        \Users\Infrastructure\Models\User::factory(10)->create();
+
+        // Seed 20 random bookings
+        \Bookings\Infrastructure\Models\Booking::factory(20)->create();
     }
 }

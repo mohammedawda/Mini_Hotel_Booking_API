@@ -43,6 +43,11 @@ class Hotel extends Model
         return $this->hasMany(RoomType::class);
     }
 
+    protected static function newFactory()
+    {
+        return \Database\Factories\HotelFactory::new();
+    }
+
     public function scopeTableFilter(Builder $query, $request): Builder
     {
         $this->applyLimit($query, $request);

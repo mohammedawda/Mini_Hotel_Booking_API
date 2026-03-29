@@ -23,6 +23,11 @@ class User extends Authenticatable
         "remember_token",
     ];
 
+    protected static function newFactory()
+    {
+        return \Database\Factories\UserFactory::new();
+    }
+
     protected function casts(): array
     {
         return [

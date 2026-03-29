@@ -57,6 +57,11 @@ class Booking extends Model
         return $this->belongsTo(RoomType::class);
     }
 
+    protected static function newFactory()
+    {
+        return \Database\Factories\BookingFactory::new();
+    }
+
     public function scopeTableFilter(Builder $query, $request): Builder
     {
         $this->applyLimit($query, $request);

@@ -154,10 +154,17 @@ The system automatically calculates stay prices based on the following rules:
    php artisan migrate
    ```
 
-5. **Start the server**:
-   ```bash
-   php artisan serve
-   ```
+5.  **Start the server**:
+    ```bash
+    php artisan serve
+    ```
+
+6.  **Seed the database** (Optional):
+    Populate the system with initial test data (Hotels, Room Types, and an Admin user):
+    ```bash
+    php artisan db:seed
+    ```
+    - **Admin user**: `admin@example.com` / `password`
 
 ---
 
