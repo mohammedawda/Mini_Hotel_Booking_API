@@ -12,9 +12,9 @@ class HotelService
         private HotelRepositoryInterface $hotelRepository
     ) {}
 
-    public function getAllHotels(): Collection
+    public function getAllHotels(mixed $request = null): mixed
     {
-        return $this->hotelRepository->all();
+        return $this->hotelRepository->all($request);
     }
 
     public function getHotelById(int $id): ?Hotel

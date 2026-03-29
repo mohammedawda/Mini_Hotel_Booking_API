@@ -60,6 +60,10 @@ Handles user registration, authentication, and profile management.
 | `POST` | `/api/room-types` | Create a new room type | Yes |
 | `PUT` | `/api/room-types/{id}` | Update a room type | Yes |
 | `DELETE` | `/api/room-types/{id}` | Delete a room type | Yes |
+| `GET` | `/api/search` | Search available rooms | No |
+| `POST` | `/api/bookings` | Create a new booking | Yes |
+| `GET` | `/api/bookings/{id}` | Get booking details | Yes |
+| `DELETE` | `/api/bookings/{id}` | Cancel a booking | Yes |
 
 ---
 

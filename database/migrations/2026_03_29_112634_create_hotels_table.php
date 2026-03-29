@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hotels', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 45);
-            $table->string('city', 45);
-            $table->text('address');
-            $table->unsignedTinyInteger('rating');
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('hotels')) {
+            Schema::create('hotels', function (Blueprint $table) {
+                $table->id();
+                $table->string('name', 45);
+                $table->string('city', 45);
+                $table->text('address');
+                $table->unsignedTinyInteger('rating');
+                $table->enum('status', ['active', 'inactive'])->default('active');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

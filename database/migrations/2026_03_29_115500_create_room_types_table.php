@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('room_types', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('hotel_id')->constrained('hotels')->onUpdate('cascade')->onDelete('cascade');
-            $table->enum('name', ['Single', 'Double', 'Suite']);
-            $table->unsignedTinyInteger('max_occupancy');
-            $table->decimal('base_price', 10, 2);
-            $table->unsignedInteger('total_rooms');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('room_types')) {
+            Schema::create('room_types', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('hotel_id')->constrained('hotels')->onUpdate('cascade')->onDelete('cascade');
+                $table->enum('name', ['Single', 'Double', 'Suite']);
+                $table->unsignedTinyInteger('max_occupancy');
+                $table->decimal('base_price', 10, 2);
+                $table->enum('status', ['active', 'inactive'])->default('active');
+                $table->unsignedInteger('total_rooms');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

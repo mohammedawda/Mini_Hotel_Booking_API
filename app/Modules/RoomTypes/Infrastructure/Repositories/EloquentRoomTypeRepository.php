@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Collection;
 
 class EloquentRoomTypeRepository implements RoomTypeRepositoryInterface
 {
-    public function all(): Collection
+    public function all(mixed $request = null): mixed
     {
-        return RoomType::all();
+        return RoomType::tableFilter($request);
     }
 
     public function findById(int $id): ?RoomType

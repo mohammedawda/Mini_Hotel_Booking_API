@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Collection;
 
 class EloquentHotelRepository implements HotelRepositoryInterface
 {
-    public function all(): Collection
+    public function all(mixed $request = null): mixed
     {
-        return Hotel::all();
+        return Hotel::tableFilter($request);
     }
 
     public function findById(int $id): ?Hotel

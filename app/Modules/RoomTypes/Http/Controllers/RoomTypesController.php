@@ -8,49 +8,52 @@ use RoomTypes\Http\Requests\StoreRoomTypeRequest;
 use RoomTypes\Http\Requests\UpdateRoomTypeRequest;
 use RoomTypes\Http\Resources\RoomTypeResource;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Traits\ApiResponse;
 
 class RoomTypesController extends Controller
 {
+    use ApiResponse;
+
     public function __construct(
         private RoomTypeService $roomTypeService
     ) {}
 
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
-        return RoomTypeResource::collection($this->roomTypeService->getAllRoomTypes());
+        $roomTypes = $this->roomTypeService->getAllRoomTypes(request())->paginate(10);
+        return $this->sendResponse(RoomTypeResource::collection($roomTypes)->response()->getData(true), "Room Types retrieved successfully");
     }
 
-    public function show(int $id): RoomTypeResource|JsonResponse
+    public function show(int $id): JsonResponse
     {
         $roomType = $this->roomTypeService->getRoomTypeById($id);
         if (!$roomType) {
-            return response()->json(["message" => "Room Type not found"], 404);
+            return $this->sendError("Room Type not found", 404);
         }
-        return new RoomTypeResource($roomType);
+        return $this->sendResponse(new RoomTypeResource($roomType), "Room Type retrieved successfully");
     }
 
-    public function store(StoreRoomTypeRequest $request): RoomTypeResource
+    public function store(StoreRoomTypeRequest $request): JsonResponse
     {
         $roomType = $this->roomTypeService->createRoomType($request->validated());
-        return new RoomTypeResource($roomType);
+        return $this->sendResponse(new RoomTypeResource($roomType), "Room Type created successfully", 201);
     }
 
-    public function update(UpdateRoomTypeRequest $request, int $id): RoomTypeResource|JsonResponse
+    public function update(UpdateRoomTypeRequest $request, int $id): JsonResponse
     {
         $success = $this->roomTypeService->updateRoomType($id, $request->validated());
         if (!$success) {
-            return response()->json(["message" => "Room Type not found"], 404);
+            return $this->sendError("Room Type not found", 404);
         }
-        return new RoomTypeResource($this->roomTypeService->getRoomTypeById($id));
+        return $this->sendResponse(new RoomTypeResource($this->roomTypeService->getRoomTypeById($id)), "Room Type updated successfully");
     }
 
     public function destroy(int $id): JsonResponse
     {
         $success = $this->roomTypeService->deleteRoomType($id);
         if (!$success) {
-            return response()->json(["message" => "Room Type not found"], 404);
+            return $this->sendError("Room Type not found", 404);
         }
-        return response()->json(["message" => "Room Type deleted successfully"]);
+        return $this->sendResponse(null, "Room Type deleted successfully");
     }
 }

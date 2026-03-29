@@ -12,9 +12,9 @@ class RoomTypeService
         private RoomTypeRepositoryInterface $roomTypeRepository
     ) {}
 
-    public function getAllRoomTypes(): Collection
+    public function getAllRoomTypes(mixed $request = null): mixed
     {
-        return $this->roomTypeRepository->all();
+        return $this->roomTypeRepository->all($request);
     }
 
     public function getRoomTypeById(int $id): ?RoomType

@@ -8,49 +8,52 @@ use Hotels\Http\Requests\StoreHotelRequest;
 use Hotels\Http\Requests\UpdateHotelRequest;
 use Hotels\Http\Resources\HotelResource;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Traits\ApiResponse;
 
 class HotelsController extends Controller
 {
+    use ApiResponse;
+
     public function __construct(
         private HotelService $hotelService
     ) {}
 
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
-        return HotelResource::collection($this->hotelService->getAllHotels());
+        $hotels = $this->hotelService->getAllHotels(request())->paginate(10);
+        return $this->sendResponse(HotelResource::collection($hotels)->response()->getData(true), "Hotels retrieved successfully");
     }
 
-    public function show(int $id): HotelResource|JsonResponse
+    public function show(int $id): JsonResponse
     {
         $hotel = $this->hotelService->getHotelById($id);
         if (!$hotel) {
-            return response()->json(["message" => "Hotel not found"], 404);
+            return $this->sendError("Hotel not found", 404);
         }
-        return new HotelResource($hotel);
+        return $this->sendResponse(new HotelResource($hotel), "Hotel retrieved successfully");
     }
 
-    public function store(StoreHotelRequest $request): HotelResource
+    public function store(StoreHotelRequest $request): JsonResponse
     {
         $hotel = $this->hotelService->createHotel($request->validated());
-        return new HotelResource($hotel);
+        return $this->sendResponse(new HotelResource($hotel), "Hotel created successfully", 201);
     }
 
-    public function update(UpdateHotelRequest $request, int $id): HotelResource|JsonResponse
+    public function update(UpdateHotelRequest $request, int $id): JsonResponse
     {
         $success = $this->hotelService->updateHotel($id, $request->validated());
         if (!$success) {
-            return response()->json(["message" => "Hotel not found"], 404);
+            return $this->sendError("Hotel not found", 404);
         }
-        return new HotelResource($this->hotelService->getHotelById($id));
+        return $this->sendResponse(new HotelResource($this->hotelService->getHotelById($id)), "Hotel updated successfully");
     }
 
     public function destroy(int $id): JsonResponse
     {
         $success = $this->hotelService->deleteHotel($id);
         if (!$success) {
-            return response()->json(["message" => "Hotel not found"], 404);
+            return $this->sendError("Hotel not found", 404);
         }
-        return response()->json(["message" => "Hotel deleted successfully"]);
+        return $this->sendResponse(null, "Hotel deleted successfully");
     }
 }

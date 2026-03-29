@@ -1,0 +1,69 @@
+<?php
+
+namespace Search\Infrastructure\Repositories;
+
+use Search\Contracts\SearchRepositoryInterface;
+use Hotels\Infrastructure\Models\Hotel;
+use Bookings\Contracts\BookingRepositoryInterface;
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+
+class EloquentSearchRepository implements SearchRepositoryInterface
+{
+    public function __construct(
+        private BookingRepositoryInterface $bookingRepository
+    ) {}
+
+    public function getAvailableHotels(array $filters): Collection
+    {
+        $city = $filters['city'];
+        $checkIn = $filters['check_in'];
+        $checkOut = $filters['check_out'];
+        $adultsCount = $filters['adults_count'];
+
+        // Use tableFilter to handle city and status filtering
+        $hotels = Cache::remember("search_hotels_{$city}", 3600, function () {
+            return Hotel::with(['roomTypes' => function ($query) {
+                    $query->where('status', 'active');
+                }])
+                ->tableFilter(request())
+                ->get();
+        });
+
+        $results = collect();
+
+        foreach ($hotels as $hotel) {
+            foreach ($hotel->roomTypes as $roomType) {
+                // Check occupancy
+                if ($roomType->max_occupancy < $adultsCount) {
+                    continue;
+                }
+
+                // Calculate availability
+                $activeBookings = $this->bookingRepository->getActiveBookingsForRoomType(
+                    $roomType->id,
+                    $checkIn,
+                    $checkOut
+                );
+
+                $bookedRoomsCount = $activeBookings->sum('rooms_count');
+                $availableRooms = $roomType->total_rooms - $bookedRoomsCount;
+
+                if ($availableRooms > 0) {
+                    $stayDuration = Carbon::parse($checkIn)->diffInDays(Carbon::parse($checkOut));
+                    $totalPrice = $roomType->base_price * ($stayDuration ?: 1);
+
+                    $results->push([
+                        'hotel'           => $hotel,
+                        'room_type'       => $roomType,
+                        'available_rooms' => $availableRooms,
+                        'total_price'     => $totalPrice,
+                    ]);
+                }
+            }
+        }
+
+        return $results;
+    }
+}
