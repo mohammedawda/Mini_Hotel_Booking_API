@@ -11,6 +11,13 @@ This project follows a **Modular Monolith** approach to ensure scalability and m
 - **DDD**: Business logic is separated into Application and Domain layers within each module.
 - **Sanctum Authentication**: Secure API-based authentication.
 
+## 🛠️ Global Features
+
+To ensure consistency and ease of development, the following global features are implemented:
+
+- **Custom Timestamp Casting**: All models automatically format `created_at` and `updated_at` to `Y-m-d H:i:s` using a shared `TimestampDefaultFormat` cast.
+- **Centralized Exception Handling**: A global exception renderer in `bootstrap/app.php` provides standardized JSON responses for all errors, including debug information in non-production environments.
+
 ## 📂 Directory Structure
 
 The project logic is organized into modules under `app/Modules/`.

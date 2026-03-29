@@ -14,6 +14,12 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         //
     })
-    ->withExceptions(function (Exceptions $exceptions) {
-        //
+    ->withExceptions(function (Illuminate\Foundation\Configuration\Exceptions $exceptions) {
+        $exceptions->renderable(function (Throwable $e) {
+            if (is_string($e->getCode()) || $e->getCode() == 0) {
+                return response()->json(["status" => false, "message" => __('An unexpected error occurred, Please try again later.'), "debug" => $e->__toString()], 500);
+            }
+
+            return response()->json(["status" => false, "message" => $e->getMessage(), "debug" => \Illuminate\Support\Facades\App::environment(['production']) ? "" : $e->__toString()], $e->getCode());
+        });
     })->create();
