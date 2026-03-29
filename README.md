@@ -35,35 +35,87 @@ app/Modules/
 
 ---
 
-## 🛠️ Modules Status
+## 🛠️ Modules Status & API Reference
 
 ### 👤 Users Module
 Handles user registration, authentication, and profile management.
 - **Implemented Features**:
     - Registration with validation.
     - Login with Token-based authentication (Sanctum).
-    - Logout and Revoke authentication.
-    - Fetch authenticated user data.
-
----
-
-## 🔗 API Endpoints
-
+    - Logout and Token Revocation.
+- **Endpoints**:
 | Method | Endpoint | Description | Auth Required |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/api/register` | Register a new user | No |
 | `POST` | `/api/login` | Log in and receive a token | No |
 | `POST` | `/api/logout` | Log out and revoke token | Yes |
 | `GET` | `/api/user` | Get authenticated user data | Yes |
+
+### 🏨 Hotels Module
+Manages hotel properties and their statuses.
+- **Implemented Features**:
+    - Full CRUD (Create, Read, Update, Delete).
+    - Enum-based status management (active/inactive).
+    - Optimized filtering and searching via `HasFilter` trait.
+- **Endpoints**:
+| Method | Endpoint | Description | Auth Required |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/hotels` | List all hotels (with filtering/sorting) | No |
+| `GET` | `/api/hotels/{id}` | Get specific hotel details | No |
+| `POST` | `/api/hotels` | Create a new hotel | Yes |
+| `PUT` | `/api/hotels/{id}` | Update a hotel | Yes |
+| `DELETE` | `/api/hotels/{id}` | Delete a hotel | Yes |
+
+### 🛏️ Room Types Module
+Defines room categories and capacities for each hotel.
+- **Implemented Features**:
+    - Full CRUD linked to Hotels.
+    - Capacity and pricing management.
+    - Enum-based status management.
+- **Endpoints**:
+| Method | Endpoint | Description | Auth Required |
+| :--- | :--- | :--- | :--- |
 | `GET` | `/api/room-types` | List all room types | No |
 | `GET` | `/api/room-types/{id}` | Get specific room type | No |
 | `POST` | `/api/room-types` | Create a new room type | Yes |
 | `PUT` | `/api/room-types/{id}` | Update a room type | Yes |
 | `DELETE` | `/api/room-types/{id}` | Delete a room type | Yes |
-| `GET` | `/api/search` | Search available rooms | No |
+
+### 🔍 Search Module
+Provides high-performance availability searching.
+- **Implemented Features**:
+    - Real-time availability calculation.
+    - Caching for hotel and room type metadata per city.
+    - Standardized filtering via `HasFilter` trait.
+- **Endpoints**:
+| Method | Endpoint | Description | Auth Required |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/search` | Search available rooms by city/dates | No |
+
+### 📅 Bookings Module
+Handles room reservations and status tracking.
+- **Implemented Features**:
+    - Secure booking creation.
+    - Cancellation and status management.
+    - **Overbooking Prevention Logic**.
+- **Endpoints**:
+| Method | Endpoint | Description | Auth Required |
+| :--- | :--- | :--- | :--- |
 | `POST` | `/api/bookings` | Create a new booking | Yes |
 | `GET` | `/api/bookings/{id}` | Get booking details | Yes |
 | `DELETE` | `/api/bookings/{id}` | Cancel a booking | Yes |
+
+---
+
+## 🛡️ Booking Approach: Overbooking Prevention
+
+To ensure system reliability and prevent overbooking (race conditions), we implemented the following approach:
+
+1.  **Database Transactions**: All booking steps (availability check, occupancy validation, and record creation) are encapsulated within a single atomic database transaction.
+2.  **Pessimistic Locking**: We use **Row-Level Locking (`lockForUpdate()`)** on the targeted `RoomType` during the availability check phase. 
+    - This ensures that if two users attempt to book the last room simultaneously, the second user's request will wait until the first user's transaction is completed (committed or rolled back).
+    - After the lock is acquired, the system recalculates available rooms by subtracting existing active bookings (Pending/Confirmed) from the total capacity.
+3.  **Atomic Consistency**: By combining transactions with pessimistic locking, we guarantee that no more rooms can be booked than are actually available, even under high concurrency.
 
 ---
 
