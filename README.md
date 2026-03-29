@@ -128,36 +128,6 @@ The system automatically calculates stay prices based on the following rules:
 3.  **Long Stay Discount**: A **10% discount** is applied to the total price if the stay duration is **5 nights or more**.
 4.  **Currency Integrity**: Prices are calculated server-side during both search and booking creation to ensure consistency.
 
----
-
-## 🐳 Docker Setup (Alternative)
-
-If you prefer to run the project using a pre-configured Docker environment, follow these steps:
-
-### 📂 Directory Structure
-To ensure correct mounting, organize your directories as follows:
-- `/home/hotel-docker`
-- `/home/backend/Mini_Hotel_Booking_API`
-
-### 🚀 Setup Steps
-
-1. **Clone the Docker repository**:
-   ```bash
-   git clone https://github.com/mohammedawda/hotel-docker
-   cd hotel-docker
-   ```
-
-2. **Build and start the containers**:
-   ```bash
-   docker compose up -d
-   ```
-
-3. **Access the Application container**:
-   To run artisan commands or composer, enter the `hotel_app` container:
-   ```bash
-   docker exec -it hotel_app bash
-   cd Mini_Hotel_Booking_API
-   ```
 
 ---
 
@@ -196,6 +166,37 @@ To ensure correct mounting, organize your directories as follows:
     php artisan db:seed
     ```
     - **Admin user**: `admin@example.com` / `password`
+
+---
+
+## 🐳 Docker Setup (Alternative)
+
+If you prefer to run the project using a pre-configured Docker environment, follow these steps:
+
+### 📂 Directory Structure
+To ensure correct mounting, organize your directories as follows:
+- `/home/hotel-docker`
+- `/home/backend/Mini_Hotel_Booking_API`
+
+### 🚀 Setup Steps
+
+1. **Clone the Docker repository**:
+   ```bash
+   git clone https://github.com/mohammedawda/hotel-docker
+   cd hotel-docker
+   ```
+
+2. **Build and start the containers**:
+   ```bash
+   docker compose up -d
+   ```
+
+3. **Access the Application container**:
+   To run artisan commands or composer, enter the `hotel_app` container:
+   ```bash
+   docker exec -it hotel_app bash
+   cd Mini_Hotel_Booking_API
+   ```
 
 ---
 
