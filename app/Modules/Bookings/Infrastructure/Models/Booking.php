@@ -61,15 +61,4 @@ class Booking extends Model
     {
         return \Database\Factories\BookingFactory::new();
     }
-
-    public function scopeTableFilter(Builder $query, $request): Builder
-    {
-        $this->applyLimit($query, $request);
-        $this->applySort($query, $request);
-        $this->applySearch($query, $request);
-        $this->applyColumnFilters($query, $request);
-        $this->applyDateFilters($query, $request);
-        $this->applyCustomFilters($query, $request);
-        return $query;
-    }
 }

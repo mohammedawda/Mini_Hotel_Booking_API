@@ -13,10 +13,22 @@ trait HasFilter
         'sort_type' => 'desc',
     ];
 
+    public function scopeTableFilter(Builder $query, $request): Builder
+    {
+        $this->applySearch($query, $request);
+        $this->applyColumnFilters($query, $request);
+        $this->applyCustomFilters($query, $request);
+        $this->applyLimit($query, $request);
+        $this->applySort($query, $request);
+        return $query;
+    }
+
     protected function applyLimit(Builder &$query, $request): Builder
     {
         if ($request->has('limit') && is_numeric($request->limit) && isset($this->filterLimit)) {
             $this->perPage = min((int) $request->limit, $this->filterLimit);
+        } else {
+            $this->perPage = $this->defaultFilters['limit'];
         }
         return $query;
     }

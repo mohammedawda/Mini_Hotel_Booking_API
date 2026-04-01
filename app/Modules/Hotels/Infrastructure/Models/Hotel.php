@@ -16,9 +16,9 @@ class Hotel extends Model
     use HasFactory, HasFilter;
 
     protected array $filterSearchCols = ['name', 'address'];
-    protected array $filterCols = ['city', 'status'];
-    protected array $filterSort = ['name', 'rating', 'status', 'created_at'];
-    protected int $filterLimit = 100;
+    protected array $filterCols       = ['city', 'status'];
+    protected array $filterSort       = ['id', 'created_at', 'name', 'rating', 'status'];
+    protected int $filterLimit        = 15;
 
     protected $fillable = [
         "name",
@@ -46,15 +46,5 @@ class Hotel extends Model
     protected static function newFactory()
     {
         return \Database\Factories\HotelFactory::new();
-    }
-
-    public function scopeTableFilter(Builder $query, $request): Builder
-    {
-        $this->applyLimit($query, $request);
-        $this->applySort($query, $request);
-        $this->applySearch($query, $request);
-        $this->applyColumnFilters($query, $request);
-        $this->applyCustomFilters($query, $request);
-        return $query;
     }
 }

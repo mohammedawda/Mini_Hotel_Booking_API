@@ -20,7 +20,7 @@ class HotelsController extends Controller
 
     public function index(): JsonResponse
     {
-        $hotels = $this->hotelService->getAllHotels(request())->paginate(10);
+        $hotels = $this->hotelService->getAllHotels(request())->paginate();
         return $this->sendResponse(HotelResource::collection($hotels)->response()->getData(true), "Hotels retrieved successfully");
     }
 

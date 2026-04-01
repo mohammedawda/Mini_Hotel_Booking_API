@@ -20,7 +20,7 @@ class RoomTypesController extends Controller
 
     public function index(): JsonResponse
     {
-        $roomTypes = $this->roomTypeService->getAllRoomTypes(request())->paginate(10);
+        $roomTypes = $this->roomTypeService->getAllRoomTypes(request())->paginate();
         return $this->sendResponse(RoomTypeResource::collection($roomTypes)->response()->getData(true), "Room Types retrieved successfully");
     }
 
