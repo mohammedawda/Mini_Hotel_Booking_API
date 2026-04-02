@@ -2,6 +2,7 @@
 
 namespace RoomTypes\Http\Requests;
 
+use Exception;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use RoomTypes\Domain\Enums\RoomTypeName;
@@ -22,5 +23,10 @@ class UpdateRoomTypeRequest extends FormRequest
             "base_price"     => "sometimes|numeric|min:0",
             "total_rooms"    => "sometimes|integer|min:0",
         ];
+    }
+
+    public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        throw new Exception($validator->errors()->first(), 403);
     }
 }

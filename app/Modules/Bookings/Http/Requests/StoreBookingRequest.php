@@ -2,6 +2,7 @@
 
 namespace Bookings\Http\Requests;
 
+use Exception;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreBookingRequest extends FormRequest
@@ -22,7 +23,11 @@ class StoreBookingRequest extends FormRequest
             "check_out"    => "required|date|after:check_in",
             "rooms_count"  => "required|integer|min:1",
             "adults_count" => "required|integer|min:1",
-            "total_price"  => "required|numeric|min:0",
         ];
+    }
+
+    public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        throw new Exception($validator->errors()->first(), 403);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Hotels\Http\Requests;
 
+use Exception;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Hotels\Domain\Enums\HotelStatus;
@@ -22,5 +23,10 @@ class UpdateHotelRequest extends FormRequest
             "rating"  => "sometimes|integer|min:1|max:5",
             "status"  => ["sometimes", Rule::enum(HotelStatus::class)],
         ];
+    }
+
+    public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        throw new Exception($validator->errors()->first(), 403);
     }
 }
