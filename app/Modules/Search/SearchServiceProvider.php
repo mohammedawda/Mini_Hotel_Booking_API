@@ -6,7 +6,6 @@ use Illuminate\Support\ServiceProvider;
 use Search\Application\Services\SearchService;
 use Search\Contracts\SearchRepositoryInterface;
 use Search\Infrastructure\Repositories\EloquentSearchRepository;
-use Bookings\Contracts\BookingRepositoryInterface;
 use Bookings\Domain\Services\PricingService;
 
 class SearchServiceProvider extends ServiceProvider
@@ -15,7 +14,6 @@ class SearchServiceProvider extends ServiceProvider
     {
         $this->app->singleton(SearchRepositoryInterface::class, function ($app) {
             return new EloquentSearchRepository(
-                $app->make(BookingRepositoryInterface::class),
                 $app->make(PricingService::class)
             );
         });

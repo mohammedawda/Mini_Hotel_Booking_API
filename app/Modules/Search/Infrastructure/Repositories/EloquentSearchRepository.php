@@ -4,7 +4,6 @@ namespace Search\Infrastructure\Repositories;
 
 use Search\Contracts\SearchRepositoryInterface;
 use Hotels\Infrastructure\Models\Hotel;
-use Bookings\Contracts\BookingRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -13,7 +12,6 @@ use Bookings\Domain\Services\PricingService;
 class EloquentSearchRepository implements SearchRepositoryInterface
 {
     public function __construct(
-        private BookingRepositoryInterface $bookingRepository,
         private PricingService $pricingService
     ) {}
 
@@ -42,15 +40,8 @@ class EloquentSearchRepository implements SearchRepositoryInterface
                     continue;
                 }
 
-                // Calculate availability
-                $activeBookings = $this->bookingRepository->getActiveBookingsForRoomType(
-                    $roomType->id,
-                    $checkIn,
-                    $checkOut
-                );
-
-                $bookedRoomsCount = $activeBookings->sum('rooms_count');
-                $availableRooms = $roomType->total_rooms - $bookedRoomsCount;
+                // Check availability from the pre-computed counter
+                $availableRooms = $roomType->available_rooms;
 
                 if ($availableRooms > 0) {
                     $totalPrice = $this->pricingService->calculateTotalPrice(
