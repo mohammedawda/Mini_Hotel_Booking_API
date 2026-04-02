@@ -3,7 +3,6 @@
 namespace Bookings\Contracts;
 
 use Bookings\Infrastructure\Models\Booking;
-use Illuminate\Database\Eloquent\Collection;
 
 interface BookingRepositoryInterface
 {
@@ -12,5 +11,5 @@ interface BookingRepositoryInterface
     public function create(array $data): Booking;
     public function update(int $id, array $data): bool;
     public function delete(int $id): bool;
-    public function getActiveBookingsForRoomType(int $roomTypeId, string $checkIn, string $checkOut): Collection;
 }
+

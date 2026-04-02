@@ -17,7 +17,7 @@ class RoomType extends Model
 
     protected array $filterCols       = ['hotel_id', 'status'];
     protected array $filterSearchCols = ['name'];
-    protected array $filterSort       = ['id', 'created_at', 'base_price', 'total_rooms', 'max_occupancy'];
+    protected array $filterSort       = ['id', 'created_at', 'base_price', 'total_rooms', 'available_rooms', 'max_occupancy'];
     protected int $filterLimit        = 15;
 
     protected $fillable = [
@@ -26,6 +26,7 @@ class RoomType extends Model
         "max_occupancy",
         "base_price",
         "total_rooms",
+        "available_rooms",
     ];
 
     protected function casts(): array
